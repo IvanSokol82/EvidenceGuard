@@ -1,11 +1,52 @@
 import json
+import os
 import re
 from typing import Protocol
+
+import httpx
+
+from src.config import settings
 
 
 class LLMProvider(Protocol):
     async def generate(self, prompt: str, system_prompt: str = "") -> str:
         ...
+
+
+class OpenAILLMProvider:
+    """
+    Live OpenAI Provider for GPT-4o / GPT-4o-mini generation.
+    Used when OPENAI_API_KEY is configured in .env.
+    """
+
+    def __init__(self, api_key: str, model: str = "gpt-4o-mini"):
+        self.api_key = api_key
+        self.model = model
+
+    async def generate(self, prompt: str, system_prompt: str = "") -> str:
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        sys_msg = system_prompt or "You are EvidenceGuard AI security copilot. Output JSON when requested."
+        payload = {
+            "model": self.model,
+            "messages": [
+                {"role": "system", "content": sys_msg},
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": 0.1,
+        }
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                resp = await client.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+                resp.raise_for_status()
+                data = resp.json()
+                return data["choices"][0]["message"]["content"]
+        except Exception:
+            # Graceful fallback to MockLLMProvider if network or API key fails
+            mock = MockLLMProvider()
+            return await mock.generate(prompt, system_prompt)
 
 
 class MockLLMProvider:
@@ -19,7 +60,6 @@ class MockLLMProvider:
         prompt_lower = prompt.lower()
 
         if "extract" in prompt_lower or "вилучити" in prompt_lower:
-            # Extract actual lines from prompt text (numbered or with '?')
             parts = prompt.split("\n\n")
             raw_text = parts[-1] if len(parts) > 1 else prompt
             lines = [
@@ -147,4 +187,7 @@ class MockLLMProvider:
 
 
 def get_llm_provider() -> LLMProvider:
+    api_key = os.getenv("OPENAI_API_KEY") or getattr(settings, "OPENAI_API_KEY", "")
+    if api_key and api_key.startswith("sk-"):
+        return OpenAILLMProvider(api_key=api_key)
     return MockLLMProvider()
