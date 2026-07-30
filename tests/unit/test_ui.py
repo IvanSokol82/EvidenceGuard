@@ -21,7 +21,8 @@ async def test_ui_documents_page(async_client: AsyncClient):
 async def test_ui_new_questionnaire_page(async_client: AsyncClient):
     response = await async_client.get("/ui/questionnaires/new")
     assert response.status_code == 200
-    assert "Опрацювати новий security questionnaire" in response.text
+    assert "Опрацювати новий" in response.text
+
 
 
 @pytest.mark.asyncio

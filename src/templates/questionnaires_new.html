@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Новий опитувальник — EvidenceGuard{% endblock %}
+{% block title %}{{ t('new_q_title', lang) }} — EvidenceGuard{% endblock %}
 
 {% block content %}
 <div class="max-w-4xl mx-auto space-y-8">
     <div>
-        <h1 class="text-2xl font-bold text-white">Опрацювати новий security questionnaire</h1>
-        <p class="text-sm text-slate-400">Вставте текст опитувальника або завантажте файл (PDF, DOCX, XLSX, EML). Система вилучить запитання та знайде докази.</p>
+        <h1 class="text-2xl font-bold text-white">{{ t('new_q_title', lang) }}</h1>
+        <p class="text-sm text-slate-400">{{ t('new_q_desc', lang) }}</p>
     </div>
 
     <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
@@ -15,38 +15,38 @@
             <input type="hidden" name="organization_id" value="{{ default_org_id }}">
 
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Назва опитувальника / Клієнт</label>
-                <input type="text" name="title" required placeholder="напр. Security Assessment — Acme Enterprise" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
+                <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t('q_title_label', lang) }}</label>
+                <input type="text" name="title" required placeholder="{{ t('q_title_placeholder', lang) }}" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Мова відповіді</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">{% if lang == 'en' %}Response Language{% else %}Мова відповіді{% endif %}</label>
                 <select name="output_language" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
-                    <option value="uk">Українська (Ukrainian)</option>
-                    <option value="en">Англійська (English)</option>
+                    <option value="uk" {% if lang == 'uk' %}selected{% endif %}>Українська (Ukrainian)</option>
+                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English (Англійська)</option>
                 </select>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Варіант 1: Вставити список запитань (Pasted Text)</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">{% if lang == 'en' %}Option 1: Paste Questions Text{% else %}Варіант 1: Вставити список запитань (Pasted Text){% endif %}</label>
                 <textarea name="raw_text" rows="6" placeholder="1. Do you encrypt data at rest?&#10;2. Do you support SSO and SAML 2.0?&#10;3. Do you have SOC 2 Type II certification?" class="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-600 focus:outline-none focus:border-emerald-500 font-mono"></textarea>
             </div>
 
             <div class="relative flex py-2 items-center">
                 <div class="flex-grow border-t border-slate-800"></div>
-                <span class="flex-shrink mx-4 text-xs font-semibold uppercase text-slate-500">Або</span>
+                <span class="flex-shrink mx-4 text-xs font-semibold uppercase text-slate-500">{% if lang == 'en' %}OR{% else %}Або{% endif %}</span>
                 <div class="flex-grow border-t border-slate-800"></div>
             </div>
 
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Варіант 2: Завантажити файл опитувальника (PDF, DOCX, XLSX, EML)</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">{% if lang == 'en' %}Option 2: Upload Questionnaire File (PDF, DOCX, XLSX, TXT, EML){% else %}Варіант 2: Завантажити файл опитувальника (PDF, DOCX, XLSX, TXT, EML){% endif %}</label>
                 <input type="file" name="file" class="w-full text-sm text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
             </div>
 
             <div class="pt-4">
                 <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg transition flex items-center justify-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Запустити аналіз та RAG пошук доказів
+                    {{ t('q_btn_submit', lang) }}
                 </button>
             </div>
         </form>
