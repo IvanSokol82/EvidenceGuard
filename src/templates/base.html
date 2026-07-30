@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="{{ lang if lang else 'uk' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EvidenceGuard — AI Security Questionnaire Copilot{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col">
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <a href="/?lang={{ lang }}" class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-slate-950">EG</div>
+                <span class="text-xl font-bold tracking-tight text-white">EvidenceGuard</span>
+            </a>
+            <nav class="flex items-center space-x-6 text-sm font-medium text-slate-300">
+                <a href="/?lang={{ lang }}" class="hover:text-emerald-400 transition">{{ t('nav_home', lang) }}</a>
+                <a href="/ui/documents?lang={{ lang }}" class="hover:text-emerald-400 transition">{{ t('nav_documents', lang) }}</a>
+                <a href="/ui/questionnaires/new?lang={{ lang }}" class="hover:text-emerald-400 transition">{{ t('nav_new_questionnaire', lang) }}</a>
+                <a href="/ui/review?lang={{ lang }}" class="hover:text-emerald-400 transition flex items-center gap-1">
+                    {{ t('nav_review_queue', lang) }}
+                    <span class="px-2 py-0.5 text-xs rounded-full bg-amber-950 text-amber-400 border border-amber-800 font-semibold">Review</span>
+                </a>
+
+                <!-- Language Switcher -->
+                <div class="flex items-center border border-slate-700 rounded-lg p-0.5 text-xs font-mono bg-slate-950">
+                    <a href="?lang=uk" class="px-2 py-1 rounded {{ 'bg-emerald-500 text-slate-950 font-bold' if lang != 'en' else 'text-slate-400 hover:text-white' }}">UA</a>
+                    <a href="?lang=en" class="px-2 py-1 rounded {{ 'bg-emerald-500 text-slate-950 font-bold' if lang == 'en' else 'text-slate-400 hover:text-white' }}">EN</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Disclaimer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-4xl mx-auto px-4 space-y-1">
+            <p><strong>{{ t('disclaimer_title', lang) }}</strong> {{ t('disclaimer_text', lang) }}</p>
+        </div>
+    </footer>
+</body>
+</html>

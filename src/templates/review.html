@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Черга перевірки — EvidenceGuard{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-white">Черга ручної перевірки (Human Review Queue)</h1>
+            <p class="text-sm text-slate-400">Перевірте чернетки відповідей, верифікуйте джерела доказів та затвердьте відповідь перед надсиланням.</p>
+        </div>
+        <div class="px-3 py-1 bg-amber-950 text-amber-400 border border-amber-800 rounded-full text-xs font-semibold">
+            Очікують перевірки: {{ queue_items|length }}
+        </div>
+    </div>
+
+    {% for item in queue_items %}
+    <div id="review-card-{{ item.draft.id }}" class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6">
+
+        <!-- Question Header -->
+        <div class="flex items-start justify-between border-b border-slate-800 pb-4">
+            <div>
+                <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">Запитання #{{ item.question.question_number }}</span>
+                <h2 class="text-lg font-bold text-white mt-1">{{ item.question.original_text }}</h2>
+            </div>
+            <div>
+                {% if item.draft.validation_status == 'SUPPORTED' %}
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">SUPPORTED</span>
+                {% elif item.draft.validation_status == 'NO_EVIDENCE' %}
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-950 text-amber-400 border border-amber-800">NEEDS_HUMAN_INPUT</span>
+                {% else %}
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-rose-950 text-rose-400 border border-rose-800">{{ item.draft.validation_status }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Answer Draft -->
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 space-y-2">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Чернетка відповіді (Generated Answer Draft)</h3>
+            <p class="text-sm text-slate-200 leading-relaxed font-mono whitespace-pre-line">{{ item.draft.draft_text }}</p>
+        </div>
+
+        <!-- Evidence Pack -->
+        {% if item.evidence %}
+        <div class="space-y-3">
+            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Знайдені докази з баз знань (Evidence Pack)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {% for ev in item.evidence %}
+                <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-3 space-y-1.5 text-xs">
+                    <div class="flex justify-between items-center text-slate-300">
+                        <span class="font-bold text-emerald-400">{{ ev.chunk.document.title if ev.chunk and ev.chunk.document else 'Затверджена політика' }}</span>
+                        <span class="font-mono text-[10px] text-slate-500">RRF: {{ ev.rrf_score }}</span>
+                    </div>
+                    <p class="text-slate-400 line-clamp-3 italic">"{{ ev.chunk.content if ev.chunk else '' }}"</p>
+                    <div class="text-[10px] text-slate-500 font-mono">
+                        {{ ev.chunk.page_reference if ev.chunk and ev.chunk.page_reference else '' }} | {{ ev.chunk.document_version_snapshot if ev.chunk else 'v1.0' }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="p-3 bg-amber-950/40 border border-amber-900/60 rounded-lg text-xs text-amber-300">
+            <strong>Увага:</strong> У базі знань не знайдено жодного затвердженого документа для підтвердження цієї відповіді.
+        </div>
+        {% endif %}
+
+        <!-- Missing Information & Assumptions -->
+        {% if item.draft.missing_information %}
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1">
+            <span class="font-semibold text-amber-400">Відсутня інформація (Missing info):</span>
+            <ul class="list-disc list-inside text-slate-400">
+                {% for info in item.draft.missing_information %}
+                <li>{{ info }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Human Review Actions Form -->
+        <div class="pt-4 border-t border-slate-800">
+            <form action="/ui/review/{{ item.draft.id }}/decision" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Редагувати текст відповіді (необов'язково)</label>
+                    <textarea name="edited_text" rows="3" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500 font-mono">{{ item.draft.draft_text }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Коментар рев'юера</label>
+                    <input type="text" name="comments" placeholder="напр. Перевірено за політикою шифрування" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+
+                <div class="flex flex-wrap gap-3">
+                    <button type="submit" name="decision" value="approved" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-lg transition flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        Затвердити (Approve)
+                    </button>
+                    <button type="submit" name="decision" value="edited" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-sm rounded-lg border border-slate-700 transition">
+                        Зберегти відредаговану (Save Edit)
+                    </button>
+                    <button type="submit" name="decision" value="escalated" class="px-5 py-2.5 bg-amber-950 hover:bg-amber-900 text-amber-300 font-semibold text-sm rounded-lg border border-amber-800 transition">
+                        Ескалювати на фахівця (Escalate)
+                    </button>
+                    <button type="submit" name="decision" value="rejected" class="px-5 py-2.5 bg-rose-950 hover:bg-rose-900 text-rose-300 font-semibold text-sm rounded-lg border border-rose-800 transition">
+                        Відхилити (Reject)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-12 text-center text-slate-400 space-y-3">
+        <svg class="w-12 h-12 mx-auto text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <h3 class="text-lg font-bold text-white">Усі чернетки перевірено!</h3>
+        <p class="text-sm">У черзі ручної перевірки немає нових відповідей.</p>
+        <a href="/ui/questionnaires/new" class="inline-block mt-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition">
+            Опрацювати новий опитувальник
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

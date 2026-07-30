@@ -1,0 +1,5 @@
+1. Do you encrypt customer data at rest and in transit? Specify the exact standards and protocols used.
+2. Do you support enterprise Single Sign-On (SSO) via SAML 2.0 or Okta, and is MFA required?
+3. Where are your primary production databases physically hosted, and do you hold an official SOC 2 Type II audit report?
+4. Do you possess a valid PCI-DSS Level 1 certification for processing credit card payments?
+5. Are customer datasets ever transmitted to third-party AI subprocessors for LLM model training?

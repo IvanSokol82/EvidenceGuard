@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: evidenceguard_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-evidenceguard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-evidenceguard_password}
+      POSTGRES_DB: ${POSTGRES_DB:-evidenceguard_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-evidenceguard} -d ${POSTGRES_DB:-evidenceguard_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: evidenceguard_app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://${POSTGRES_USER:-evidenceguard}:${POSTGRES_PASSWORD:-evidenceguard_password}@postgres:5432/${POSTGRES_DB:-evidenceguard_db}
+      - APP_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

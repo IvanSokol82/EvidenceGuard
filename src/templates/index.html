@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}EvidenceGuard — AI Security Questionnaire Copilot{% endblock %}
+
+{% block content %}
+<div class="space-y-20 py-8">
+    <!-- Hero Section -->
+    <section class="text-center max-w-4xl mx-auto space-y-6">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-950 text-emerald-400 border border-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            {{ t('hero_badge', lang) }}
+        </div>
+
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+            {{ t('hero_title_1', lang) }}<span class="text-emerald-400 underline decoration-emerald-500/30">{{ t('hero_title_highlight', lang) }}</span>.
+        </h1>
+
+        <p class="text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            {{ t('hero_desc', lang) }}
+        </p>
+
+        <div class="flex flex-wrap justify-center gap-4 pt-4">
+            <a href="/ui/questionnaires/new?lang={{ lang }}" class="px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                {{ t('cta_new_questionnaire', lang) }}
+            </a>
+            <a href="/ui/documents?lang={{ lang }}" class="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-semibold border border-slate-700 transition flex items-center gap-2">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                {{ t('cta_knowledge_base', lang) }}
+            </a>
+            <a href="/ui/review?lang={{ lang }}" class="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 font-semibold border border-amber-800/60 transition flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                {{ t('cta_review_queue', lang) }}
+            </a>
+        </div>
+    </section>
+
+    <!-- Core Principle Banner -->
+    <section class="bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/40 border border-slate-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+        <div class="max-w-3xl space-y-3">
+            <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-widest">{{ t('principle_tag', lang) }}</span>
+            <h2 class="text-2xl font-bold text-white">{{ t('principle_title', lang) }}</h2>
+            <p class="text-sm text-slate-300 leading-relaxed">
+                {{ t('principle_desc', lang) }}
+            </p>
+        </div>
+    </section>
+
+    <!-- How it works steps -->
+    <section class="space-y-8">
+        <div class="text-center space-y-2">
+            <h2 class="text-2xl font-bold text-white">How EvidenceGuard Works</h2>
+            <p class="text-sm text-slate-400">Automated step-by-step process for preparing auditable security drafts</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 relative">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold flex items-center justify-center text-sm">1</div>
+                <h3 class="font-bold text-white text-base">{{ t('step_1_title', lang) }}</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">{{ t('step_1_desc', lang) }}</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 relative">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold flex items-center justify-center text-sm">2</div>
+                <h3 class="font-bold text-white text-base">{{ t('step_2_title', lang) }}</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">{{ t('step_2_desc', lang) }}</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 relative">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold flex items-center justify-center text-sm">3</div>
+                <h3 class="font-bold text-white text-base">{{ t('step_3_title', lang) }}</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">{{ t('step_3_desc', lang) }}</p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 space-y-3 relative">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-800 font-bold flex items-center justify-center text-sm">4</div>
+                <h3 class="font-bold text-white text-base">{{ t('step_4_title', lang) }}</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">{{ t('step_4_desc', lang) }}</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
