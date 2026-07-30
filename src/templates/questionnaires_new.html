@@ -22,8 +22,9 @@
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">{% if lang == 'en' %}Response Language{% else %}Мова відповіді{% endif %}</label>
                 <select name="output_language" class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
-                    <option value="uk" {% if lang == 'uk' %}selected{% endif %}>Українська (Ukrainian)</option>
-                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English (Англійська)</option>
+                    <option value="uk" {% if lang == 'uk' %}selected{% endif %}>Українська</option>
+                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+
                 </select>
             </div>
 
