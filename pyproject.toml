@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [
     { name = "Ivan Sokol", url = "https://github.com/IvanSokol82" }
 ]
-license = { text = "MIT with Attribution" }
+license = { text = "MIT" }
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.110.0",
