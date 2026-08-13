@@ -7,6 +7,10 @@ name = "evidenceguard"
 version = "0.1.0"
 description = "AI Security Questionnaire Copilot - Evidence-backed security answers with human approval"
 readme = "README.md"
+authors = [
+    { name = "Ivan Sokol", url = "https://github.com/IvanSokol82" }
+]
+license = { text = "MIT with Attribution" }
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.110.0",

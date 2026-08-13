@@ -186,6 +186,14 @@ evidenceguard/
 
 ---
 
-## 📄 License
+## 📄 License & Attribution
 
-This project is licensed under the **MIT License** — see the [LICENSE](file:///c:/OSPanel/home/lenggraf/LICENSE) file for details.
+This project is licensed under the **MIT License with Attribution**. 
+
+Copyright (c) 2026 **Ivan Sokol**.
+
+Any use, distribution, or modification of this project requires preserving the author's copyright notice and providing visible attribution links to:
+- **GitHub:** [IvanSokol82](https://github.com/IvanSokol82)
+- **LinkedIn:** [Ivan Sokol](https://www.linkedin.com/in/ivan-sokol-automation/)
+
+See the [`LICENSE`](file:///c:/OSPanel/home/lenggraf/LICENSE) file for full license text details.
